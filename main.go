@@ -20,23 +20,35 @@ func main() {
 
 	err := config.ReadInConfig()
 
-	// ROUTES
-	app.Get("/", func(ctx *fiber.Ctx) error {
-		return ctx.SendString(config.GetString("DB_NAME"))
-	})
-
 	// DATABASE
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
 		config.GetString("HOST"), config.GetString("DB_USERNAME"), config.GetString("DB_PASSWORD"),
 		config.GetString("DB_NAME"), config.GetString("PORT"))
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
+	userId := uuid.New()
 	db.Create(&models.User{
-		ID: uuid.New(),
+		ID: userId,
 		Email: "yudhalagicoy@gmail.com",
 		Name: "yudha",
 		Password: "halo",
 		Profile: "hello.png",
+		Messages: []models.Message{
+			{
+				ID: uuid.New(),
+				UserId: userId,
+				Content: "hello world",
+			},
+
+		},
+	})
+
+	// ROUTES
+	app.Get("/", func(ctx *fiber.Ctx) error {
+		user := models.User{}
+		db.First(&user)
+		fmt.Println(user)
+		return ctx.SendStatus(200)
 	})
 
 	// APP START
