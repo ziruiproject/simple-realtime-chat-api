@@ -10,5 +10,4 @@ type User struct {
 	Profile string	`gorm:"not null;column:profile_img"`
 	CreatedAt int	`gorm:"not null;column:created_at"`
 	UpdatedAt int	`gorm:"not null;column:updated_at"`
-	Messages []Message `gorm:"foreignKey:user_id;references:id"`
 }
