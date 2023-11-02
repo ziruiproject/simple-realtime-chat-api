@@ -3,8 +3,14 @@ package models
 import "github.com/google/uuid"
 
 type Message struct {
-	ID uuid.UUID	`gorm:"primary_key;column:id"`
-	UserId uuid.UUID `gorm:"column:user_id"`
-	Content string `gorm:"not null;column:content"`
-	User User `gorm:"foreignKey:user_id;references:id"`
+	ID         uuid.UUID `gorm:"primary_key"`
+	SenderID   uuid.UUID `gorm:"not null"`
+	ReceiverID uuid.UUID `gorm:"not null"`
+	Content    string `gorm:"not null"`
+
+	Sender   User `gorm:"foreignkey:SenderID"`   // Association with the sender user
+	Receiver User `gorm:"foreignkey:ReceiverID"` 
 }
+
+
+
